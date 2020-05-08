@@ -61,7 +61,7 @@ public:
     }
 };
 
-//using binary search
+//using binary search- Time Complexity: O(nlognlog(max-min))
 //finding middle element of matrix- then counting in every row, number of elements <= mid
 //if that count<k => increment low, else decrement high
 class Solution {
