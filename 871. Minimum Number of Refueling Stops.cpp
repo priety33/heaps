@@ -1,50 +1,21 @@
 class Solution {
 public:
     int minRefuelStops(int target, int startFuel, vector<vector<int>>& stations) {
-        int ans=0;
-        int n=stations.size();
-        if(n==0)
-        {
-            if(startFuel<target) return -1;
-            else return ans;
-        }
-        int f=startFuel;
-        priority_queue<int> q;
-        if(f<stations[0][0]) return -1;
-        int i=0;
-        int dist=stations[0][0];
-        for(i=0;i<stations.size()-1;i++)
-        {
-            q.push(stations[i][1]);
-            f=f-(dist);
-            dist=stations[i+1][0]-stations[i][0];
-            if(f>= target-stations[i][0]) return ans;
-            if(f<dist) //because i+1 can go out of bound create another loop outside this for last element of array
-            {
-                while(!q.empty() && f<dist)
-                {
-                    f=f+q.top();
-                    q.pop();
-                    ans++;
-                }
-                if(q.empty() && f<dist) return -1;
+        int stops=0, fuel= 0, pos=startFuel, start=0;
+        priority_queue<int> gas; 
+        while(pos<target && fuel>=0) {
+            if(start<stations.size() && stations[start][0]<=pos) {
+                gas.push(stations[start][1]); start++; 
             }
-        }
-        
-        //last station
-        q.push(stations[i][1]);
-        f=f-dist;
-        if(f>=target-stations[i][0]) return ans;
-        else
-            {
-                while(!q.empty() && f<target-stations[i][0])
-                {
-                    f=f+q.top();
-                    q.pop();
-                    ans++;
-                }
-                if(q.empty() && f<target-stations[i][0]) return -1;
+            int p=target;
+            if(start<stations.size()) p=min(p, stations[start][0]);
+            while(fuel<p-pos && !gas.empty()) {
+                fuel+= gas.top(); gas.pop();
+                stops++;
             }
-        return ans;
+            if(fuel<p-pos) return -1;
+            fuel= fuel-(p-pos); pos=p;
+        }
+        return (pos>=target)? stops : -1;
     }
 };
